@@ -11,6 +11,24 @@
 (filtered-accumulate prime? + 0 square 1 inc 10)
 ;88
 
+;1.33-b
+(define (product-of-coprime n)
+  (define (coprime? i)
+          (= (gcd i n) 1))
+  (filtered-accumulate coprime? * 1 identity 1 inc (- n 1)))
+
+(product-of-coprime 12)
+
+;385
+
+;product
+(define (product term a next b)
+  (define (iter a result)
+    (if (> a b)
+        result
+        (iter (next a) (* (term a) result)))
+    (iter a 1)))
+
 ;prime?
 (define (smallest-divisor n) (find-divisor n 2))
 (define (find-divisor n test-divisor)
@@ -19,7 +37,9 @@
         (else (find-divisor n (+ test-divisor 1)))))
 (define (divides? a b) (= (remainder b a) 0))
 (define (prime? n)
-  (= n (smallest-divisor n)))
+  (if (= n 1)
+      #f
+      (= n (smallest-divisor n))))
 
 ;1.32
 ;線形再帰プロセス
