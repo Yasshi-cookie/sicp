@@ -72,7 +72,7 @@
 (define x (make-point 0 0))
 (define y (make-point 2.0 0))
 (define z (make-point 0 1.0))
-(define w (make-point 2 2))
+; (define w (make-point 2 1.0))
 
 (define length-segment (make-segment x y))
 (define width-segment (make-segment x z))
