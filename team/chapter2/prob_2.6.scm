@@ -7,11 +7,10 @@
 (define (add-2 n)
   (lambda (f)
     (lambda (x)
-      (f (n (f (x (f (n f)))))))))
-; (add-2 n)
-(lambda (f)
-  (lambda (x)
-    (f (f ((n f) x)))))
+      (f (f ((n f) x))))))
+
+(define (plus n m)
+  (lambda (f) (lambda (x) ((m f) ((n f) x)))))
 
 ; (add-1 zero)
 (define one
@@ -29,6 +28,8 @@
 ((two inc) 10)
 ; 12
 (((add-2 zero) inc) 10)
+
+(((plus one two) inc) 10)
 
 (add-1 one)
 (add-1 (add-1 zero))
