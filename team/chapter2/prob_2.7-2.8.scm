@@ -1,4 +1,4 @@
-; 練習問題2.7
+; 練習問題2.7-2.8
 ; コンストラクタ
 (define (make-interval a b)
   (cons a b))
