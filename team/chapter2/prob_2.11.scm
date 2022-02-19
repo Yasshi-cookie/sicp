@@ -1,0 +1,32 @@
+; 問題が良くわからなかったなぁ。
+; このコードは掛け算の回数が少なくなるが、コードがとても読みづらい。
+(define (mul-interval x y)
+  (let
+      ((mi make-interval)
+       (lx (lower-bound x))
+       (ux (upper-bound x))
+       (ly (lower-bound y))
+       (uy (upper-bound y)))
+    (cond
+     ((and (neg-int? x) (neg-int? y))
+      (mi (* lx ly) (* ux uy)))
+     ((and (neg-int? x) (zero-span? y))
+      (mi (* lx uy) (* lx ly)))
+     ((and (neg-int? x) (pos-int? y))
+      (mi (* ux uy) (* lx ly)))
+     ((and (zero-span? x) (neg-int? y))
+      (mi (* ux uy) (* lx uy)))
+     ((and (zero-span? x) (pos-int? y))
+      (mi (* lx uy) (* ux uy)))
+     ((and (pos-int? x) (neg-int? y))
+      (mi (* ux uy) (* lx ly)))
+     ((and (pos-int? x) (zero-span? y))
+      (mi (* ux ly) (* ux uy)))
+     ((and (pos-int? x) (pos-int? y))
+      (mi (* lx ly) (* ux uy)))
+     ((and (zero-span? x) (zero-span? y))
+      (mi (min (* lx uy) (* ux ly)) (max (* lx ly) (* ux uy)))))))
+
+(define i1 (make-interval -5 3))
+(define i2 (make-interval -2 110))
+(mul-interval i1 i2) ; (-550, 330)
