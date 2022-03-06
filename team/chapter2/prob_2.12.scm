@@ -25,7 +25,4 @@
   (* 100
      (/ (- (upper-bound i) (lower-bound i))
         (+ (upper-bound i) (lower-bound i)))))
-(define i (make-center-percent 50 10))
-; (45 . 55)
-(percent i)
-; 10
+
