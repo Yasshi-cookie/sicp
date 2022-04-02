@@ -1,0 +1,15 @@
+(define nil '())
+
+(define (same-parity number . values)
+  (define remainder-number-2 (remainder number 2))
+  (define (result list-values values)
+    (cond ((null? values) list-values)
+          ((= (remainder (car values) 2) remainder-number-2)
+           (result (append list-values (list (car values))) (cdr values)))
+          (else (result list-values (cdr values)))))
+  (result nil values))
+
+(same-parity 1 2 3 4 5 6 7)
+; (3 5 7)
+(same-parity 2 2 3 4 5 6 7)
+; (2 4 6)
