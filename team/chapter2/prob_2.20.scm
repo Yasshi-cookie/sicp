@@ -7,7 +7,7 @@
           ((= (remainder (car values) 2) remainder-number-2)
            (result (append list-values (list (car values))) (cdr values)))
           (else (result list-values (cdr values)))))
-  (result nil values))
+  (result (list number) values))
 
 (same-parity 1 2 3 4 5 6 7)
 ; (3 5 7)
