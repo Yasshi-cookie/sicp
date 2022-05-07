@@ -17,12 +17,28 @@ x
 (map reverse (list (list 1) (list 3 4)))
 (length (list (list 1 2)))
 
+; よく分かってない。。。
 (define (deep-reverse ls)
   (if (not (pair? ls))
       ls
       (reverse (map deep-reverse ls))))
+(deep-reverse xyzw)
+
 (define y (list (list 5 6) (list 7 8)))
 (define xy (list x y))
+(define z (list (list 11 12) (list 13 14)))
+(define w (list (list 15 16) (list 17 18)))
+(define zw (list z w))
+(define xyzw (list xy zw))
+xyzw
+; ((((1 2) (3 4)) ((5 6) (7 8))) (((11 12) (13 14)) ((15 16) (17 18))))
+(map reverse xyzw)
+; ((((5 6) (7 8)) ((1 2) (3 4))) (((15 16) (17 18)) ((11 12) (13 14))))
+(map (lambda (ls) (map reverse ls)) xyzw)
+; ((((3 4) (1 2)) ((7 8) (5 6))) (((13 14) (11 12)) ((17 18) (15 16))))
+(map (lambda (ls) (map (lambda (ls) (map reverse ls)) ls)) xyzw)
+; ((((2 1) (4 3)) ((6 5) (8 7))) (((12 11) (14 13)) ((16 15) (18 17))))
+
 (map (lambda (ls) (map reverse ls)) (map reverse xy))
 (reverse (map (lambda (ls) (map reverse (reverse ls))) xy))
 ; (((8 7) (6 5)) ((4 3) (2 1)))
