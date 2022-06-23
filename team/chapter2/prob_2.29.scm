@@ -21,10 +21,10 @@
 ; と right-branch、枝の構成要素を返す branch-length と
 ; branch-structure を書け。
 (define (left-branch mobile) (car mobile))
-(define (right-branch mobile) (cadr mobile))
+(define (right-branch mobile) (cdr mobile))
 
 (define (branch-length branch) (car branch))
-(define (branch-structure branch) (cadr branch))
+(define (branch-structure branch) (cdr branch))
 
 ; b. これらのセレクタを使って、モビールの総重量を返す⼿続き
 ; total-weight を定義せよ。
@@ -57,8 +57,6 @@
         (left-b (left-branch mobile)))
     (+ (branch-weight right-b) (branch-weight left-b))))
 
-(total-weight not-baranced-m1)
-
 ; test
 (define baranced-m1 (make-mobile l1 r1))
 (define l1 (make-branch 2 m2))
@@ -73,8 +71,13 @@
 (define l4 (make-branch 1 10))
 (define r4 (make-branch 1 10))
 
+
+(total-weight baranced-m1)
 (is-baranced baranced-m1 #t)
 (is-baranced unbaranced-m1 #t)
+
+(balanced? unbaranced-m1)
+(balanced? baranced-m1)
 
 ; Mobile
 (define (is-baranced mobile result-bool)
@@ -85,7 +88,20 @@
                #t)
            (if (is-whose-structre-is-mobile (left-branch mobile))
                (is-baranced (branch-structure (left-branch mobile)) (and (is-local-baranced (branch-structure (left-branch mobile))) result-bool))
-               #t))))
+               #t)
+           (is-local-baranced mobile))))
+
+(define (balanced? mobile)
+  (define (torque branch)
+    (* (branch-length branch) (branch-weight branch)))
+  (define (branch-balanced? branch)
+    (let ((structure (branch-structure branch)))
+      (if (pair? structure) (balanced? structure) #t)))
+  (let ((left  (left-branch  mobile))
+        (right (right-branch mobile)))
+    (and (= (torque left) (torque right))
+      (branch-balanced? left)
+      (branch-balanced? right))))
 
 (define (is-local-baranced mobile)
   (= (moment (right-branch mobile))
@@ -110,87 +126,11 @@
 (define (moment branch)
   (* (branch-length branch) (branch-weight branch)))
 
-; (let ((i 1) (j 2))
-;   (+ i j))
 
-(define (fee age)
-  (cond
-   ((or (<= age 3) (>= age 65)) 0)
-   ((<= 4 age 6) 50)
-   ((<= 7 age 12) 100)
-   ((<= 13 age 15) 150)
-   ((<= 16 age 18) 180)
-   (else 200)))
-
-; PHPの場合
-class Mobile
-{
-    public Branch $right_branch;
-    public Branch $left_branch;
-
-    public function total_weight(): int
-    {
-        $right_branch = $this->right_branch;
-        $left_branch = $this->left_branch;
-
-        $right_weight = $right_branch->getWeight();
-        $left_weight = $left_branch->getWeight();
-
-        return $right_weight + $left_weight;
-    }
-
-    public function is_baranced()
-    {
-        if (!$this->hasMobile) {
-            return $this->result;
-        }
-
-        if ($this->right_branch->isWhoseStructureIsMobile()) {
-            $this->result = $this->result && $this->right_branch->structure->is_local_baranced();
-            $this->right_branch->structure->is_baranced()
-        }
-
-        if ($this->left_branch->isWhoseStructureIsMobile()) {
-            $this->result = $this->result && $this->left_branch->structure->is_local_baranced();
-            $this->left_branch->structure->is_baranced()
-        }
-    }
-
-    private function is_local_baranced()
-    {
-        return $this->right_branch->moment()
-            === $this->left_branch->moment();
-    }
-
-    private function hasMobile()
-    {
-        return pair?($this->right_branch) || pair?($this->left_branch);
-    }
-}
-
-class Branch
-{
-    public int $length;
-    public int|Mobile $structure;
-
-    public function getWeight(): int
-    {
-        if ($this->isWeight()) {
-            // 重りの場合
-            return $this->structure;
-        }
-
-        // Mobileの場合
-        return $this->structure->tota_weight();
-    }
-
-    public funciton isWeight(): bool
-    {
-        return pair?($this->structure) ? false : true;
-    }
-
-    public function moment(): float
-    {
-        $this->length * $this->getWeight();
-    }
-}
+; d. モビールの表現を変更し、以下のようなコンストラクタに
+; する。あなたのプログラムを新しい表現に移⾏するにはどの程度の
+; 変更が必要だろうか。
+(define (make-mobile left right) (cons left right))
+(define (make-branch length structure)
+  (cons length structure))
+; セレクタのみを変更すれば良い。
