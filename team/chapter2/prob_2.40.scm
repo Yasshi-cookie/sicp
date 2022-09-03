@@ -22,6 +22,12 @@
 (define (flatmap proc seq)
   (accumulate append nil (map proc seq)))
 
+(define (double x)
+  (list (* x 2)))
+
+(map double (list 1 2 3))
+(flatmap double (list 1 2 3))
+
 (define (prime-sum? pair)
   (prime? (+ (car pair) (cadr pair))))
 
@@ -38,9 +44,29 @@
      (map (lambda (j) (list i j))
           (enumerate-interval 1 (- i 1))))
    (enumerate-interval 1 n)))
+
+(define (unique-triple n)
+  (flatmap
+   (lambda (i)
+     (map (lambda (j)
+            (map (lambda (k) (list i j k)
+                         (enumerate-interval 1 (- i 1)))
+                 (enumerate-interval 1 (- j 1))))
+          (enumerate-interval 1 (- k 1))))))
+(unique-triple 5)
+
 (unique-pairs n)
 
+(enumerate-interval 1 (- k 1))
+
 (prime-sum-pairs 5)
+
+(map (lambda (i)
+       (map (lambda (j)
+              (map (lambda (k) (list i j k))
+                   (iota 3 1)))
+            (iota 4 1)))
+     (iota 5 1))
 
 ; prime?の定義
 (define (smallest-divisor n) (find-divisor n 2))
