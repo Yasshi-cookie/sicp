@@ -3,9 +3,12 @@
 ; と、少なくとも n 個の要素を持つリストを引数に取り、リストの最
 ; 初の n 個の要素を含むバランスの取れた⽊を⽣成する。partialtree の返り値はペア (cons で構築される) で、car には構築された
 ; ⽊を持ち、cdr には⽊に含まれなかった要素のリストを持つ。
+
 (define (list->tree elements)
   (car (partial-tree elements (length elements))))
 (define (partial-tree elts n)
+  (print c)
+  (set! c (+ c 1))
   (if (= n 0)
       (cons '() elts)
       (let ((left-size (quotient (- n 1) 2)))
@@ -30,13 +33,63 @@
                 ; (print this-entry)
                 ; (print right-result)
                 ; (print right-tree)
-                 (print remaining-elts)
+                ; (print remaining-elts)
                 (cons (make-tree this-entry
                                  left-tree
                                  right-tree)
                       remaining-elts))))))))
 
-(list->tree '(1 3 5 7 9 11))
+; n => ステップ数
+; 3 => 7
+; 10 => 21
+; 20 => 40
+; 100 => 200
+; 200 => 400
+; 400 => 800
+; 一般的に
+; n => 2n ?
+O(n)
+
+(define c 0)
+(list->tree (iota 3))
+
+(5
+ (2
+  (1 () ())
+  (3 () (4 () ())))
+ (8
+  (6 () (7 () ()))
+  (9 () (10 () ()))))
+
+'(1 3 5 7 9 11)
+(define '(1 2 3 4 5 6 7 8 9 10))
+
+left-tree '(1 3)
+this-entry 5
+right-tree '(7 9 11)
+
+left-result ((1 () ()) 2 3)
+
+left-tree (1 () ())
+
+non-left-elts (2 3)
+right-size 1
+
+this-entry 2
+
+right-result ((3 () ()))
+
+right-tree (3 () ())
+
+remaining-elts '()
+(partial-tree '(1 2 3) 3) = ((2 (1 () ()) (3 () ())))
+
+(list->tree '(1 2 3))
+(list->tree '(1 2 3 4 5 6 7 8 9 10))
+(car (partial-tree '(1 2 3 4 5 6 7 8) 3))
+
+(partial-tree '(1 2 3) 1)
+(partial-tree '(3) 1)
 
 (define (entry tree) (car tree))
 (define (left-branch tree) (cadr tree))
