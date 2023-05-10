@@ -1,3 +1,15 @@
+; 練習問題 2.67: 符号化⽊とサンプルメッセージを次のように定義
+; する。
+(define sample-tree
+  (make-code-tree (make-leaf 'A 4)
+                  (make-code-tree
+                   (make-leaf 'B 2)
+                   (make-code-tree
+                    (make-leaf 'D 1)
+                    (make-leaf 'C 1)))))
+(define sample-message '(0 1 1 0 0 1 0 1 0 1 1 1 0))
+(decode sample-message sample-tree)
+
 ; Initial leaves {(A 8) (B 3) (C 1) (D 1) (E 1) (F 1) (G 1) (H 1)}
 ;     Merge {(A 8) (B 3) ({C D} 2) (E 1) (F 1) (G 1) (H 1)}
 ;     Merge {(A 8) (B 3) ({C D} 2) ({E F} 2) (G 1) (H 1)}
