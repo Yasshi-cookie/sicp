@@ -22,6 +22,12 @@
 ; なる。基本的な微分を⾏う⼿続きを次のように書き直すと、プロ
 ; グラムをデータ主導スタイルに変形できる。
 
+(define (deriv-for-sum operands var)
+  (make-sum (deriv-for-sum (car operands))))
+
+(put 'deriv '(sum) deriv-for-sum)
+(put 'deriv '(product) deriv)
+
 (define (deriv exp var)
   (cond ((number? exp) 0)
         ((variable? exp) (if (same-variable? exp var) 1 0))
