@@ -6,7 +6,7 @@
           ((eq? op 'imag-part) (* r (sin a)))
           ((eq? op 'magnitude) r)
           ((eq? op 'angle) a)
-          (else (error "Unknown op: MAKE-FROM-REAL-IMAG" op))))
+          (else (error "Unknown op: MAKE-FROM-MAG-LANG" op))))
   dispatch)
 
 ; 参考
