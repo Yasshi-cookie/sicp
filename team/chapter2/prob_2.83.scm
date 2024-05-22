@@ -13,7 +13,7 @@
 
 ; a/b（形式としての有理数） → a ÷ b
 (define (raise-rational r)
-  (attach-tag 'real (/ (numer r) (denom r)))) ; 実数のタグってなんだっけ？
+  (attach-tag 'scheme-number (/ (numer r) (denom r))))
 
 ; x → x + 0 * i
 (define (raise-real x)
