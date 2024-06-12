@@ -20,6 +20,37 @@
 ; 使って練習問題 2.84の apply-generic を書き直し、解答を “単純
 ; 化” するようにせよ。
 
+(define (apply-generic op . args)
+  (let ((type-tags (map type-tag args)))
+    (let ((proc (get op type-tags)))
+      (if proc
+          (apply proc (map contents args))
+          (if (= (length args) 2)
+              (let ((type1 (car type-tags))
+                    (type2 (cadr type-tags))
+                    (a1 (drop (car args)))
+                    (a2 (drop (cadr args)))
+                    (diff (sub-nest type1 type2)))
+                (cond ((< diff 0)
+                       (apply-generic op a1 (raise a2)))
+                      ((> diff 0)
+                       (apply-generic op (raise a1) a2))
+                      (else
+                       (apply-generic op a1 a2))))
+              (error "No method for these types"
+                     (list op type-tags)))))))
+
+; argに対するタワーの中の深さを返す
+(define (nest arg)
+  (if (eq? arg 'complex)
+      0
+      (+ 1 (nest (raise arg)))))
+
+; arg-aとarg-bのタワーの中の位置の差を返す
+(define (sub-nest arg-a arg-b)
+  (- (nest arg-a) (nest arg-b)))
+
+; drop手続きの実装
 (define (drop x)
   (if (can-drop? x)
       (drop (project x))
