@@ -7,23 +7,24 @@
 ; って問題を reduce-terms に渡し、reduce-terms に返された
 ; ⼆つの項リストにその変数をつけ直す。
 (define (reduce-terms n d)
-    (let ((g (gcd (map coeff (term-list n))))
-            (h (gcd (map coeff (term-list d))))
-            (nn (mul-term-by-all-terms (make-term 0 (/ (coeff (first-term n)) g)) n))
-            (dd (mul-term-by-all-terms (make-term 0 (/ (coeff (first-term d)) h)) d)))
-        (list nn dd)))
+  (let ((g (gcd (map coeff (term-list n))))
+        (h (gcd (map coeff (term-list d))))
+        (nn (mul-term-by-all-terms (make-term 0 (/ (coeff (first-term n)) g)) n))
+        (dd (mul-term-by-all-terms (make-term 0 (/ (coeff (first-term d)) h)) d)))
+    (list nn dd)))
 (define (reduce-poly p1 p2)
-    (if (same-variable? (variable p1) (variable p2))
-        (let ((new-p1 (make-polynomial (variable p1) (reduce-terms (term-list p1) (term-list p2)))))
-            (make-polynomial (variable p1) (term-list new-p1)))
-        (error "Polynomials not in the same varialbe -- REDUCE-POLY" p1 p2)))
+  (if (same-variable? (variable p1) (variable p2))
+      (let ((new-p1 (make-polynomial (variable p1) (reduce-terms (term-list p1) (term-list p2)))))
+        (make-polynomial (variable p1) (term-list new-p1)))
+      (error "Polynomials not in the same varialbe -- REDUCE-POLY" p1 p2)))
 
 ; b reduce-terms と似たような⼿続きとして、元々の make-rat
 ; が整数に対して⾏っていたことと同じことを実⾏するものを
 ; 次のように定義せよ。
 (define (reduce-integers n d)
-(let ((g (gcd n d)))
-(list (/ n g) (/ d g))))
+  (let ((g (gcd n d)))
+    (list (/ n g) (/ d g))))
+
 ; そして、reduce というジェネリック演算を定義せよ。これ
 ; は、apply-generic を呼んで、reduce-poly(polynomial 型引
 ; 数に対して) または reduce-integers(scheme-number 型引
@@ -34,6 +35,36 @@
 ; 式のどちらの有理式も扱えるようになった。プログラムをテ
 ; ストするために、この拡張練習問題の最初に出てきた例を試
 ; してみよ。
+(define (install-palynomial-package)
+  ; ... 省略
+  (define (reduce-terms n d)
+    (let ((g (gcd (map coeff (term-list n))))
+          (h (gcd (map coeff (term-list d))))
+          (nn (mul-term-by-all-terms (make-term 0 (/ (coeff (first-term n)) g)) n))
+          (dd (mul-term-by-all-terms (make-term 0 (/ (coeff (first-term d)) h)) d)))
+      (list nn dd)))
+  (define (reduce-poly p1 p2)
+    (if (same-variable? (variable p1) (variable p2))
+        (let ((new-p1 (make-polynomial (variable p1) (reduce-terms (term-list p1) (term-list p2)))))
+          (make-polynomial (variable p1) (term-list new-p1)))
+        (error "Polynomials not in the same varialbe -- REDUCE-POLY" p1 p2)))
+  (put 'reduce '(polynomial polynomial)
+       (lambda (p1 p2) (tag (reduce-poly p1 p2))))
+  'done)
+
+(define (install-scheme-number-package)
+  ; ... 省略
+  (define (reduce-integers n d)
+    (let ((g (gcd n d)))
+      (list (/ n g) (/ d g))))
+  (put 'reduce '(scheme-number scheme-number)
+       (lambda (a b) (tag (reduce-integers a b))))
+  'done)
+
+; 関数名 \ 型
+;         | (scheme-number scheme-number) | (polynomial polynomial)
+; reduce  | reduce-integers               | reduce-poly
+
 (define p1 (make-polynomial 'x '((1 1) (0 1))))
 (define p2 (make-polynomial 'x '((3 1) (0 -1))))
 (define p3 (make-polynomial 'x '((1 1))))
