@@ -8,7 +8,7 @@
                       (p x y))))
      (rectangle-area x1 x2 y1 y2)))
 
-(* 1.0 (estimate-integral in-unit-circle -1 1 -1 1 100000000))
+(* 1.0 (estimate-integral in-unit-circle -1 1 -1 1 100000))
 
 (define (in-unit-circle x y)
   (<= (+ (* x x) (* y y)) 1))
