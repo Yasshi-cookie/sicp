@@ -14,13 +14,15 @@ reset のどちらかを引数として取り、次のようなふるまいを�
                  x)))
 
 (define (rand operator)
-  (cond ((eq? operator 'generate)
-         (let ((x random-init))
-           (set! x (rand-update x))
-           x))
-        ((eq? operator 'reset))
-         (lambda (new-value)
-           (set! random-init new-value)
-           (set! x new-value))
-        (else
-         (error "Unknown operator" operator))))
+  (cond
+   ((eq? operator 'generate)
+    (let ((x random-init))
+      (lambda ()
+        (set! x (rand-update x))
+        x)))
+   ((eq? operator 'reset) (lambda (new-value)
+                            (set! x new-value)))
+   (else (error "Unknown operator"))))
+
+(rand 'reset)
+((rand 'reset) 1)
